@@ -1,7 +1,7 @@
 Sublime Text 2 FriendPaste Plugin
 =============
 
-Sublime Text 2 plugin to upload code to grrp://friendpaste.com directly from the editor with the correct syntax highlighting.
+Sublime Text 2 plugin to upload code to http://friendpaste.com directly from the editor with the correct syntax highlighting.
 
 Usage
 -------
