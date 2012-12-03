@@ -6,3 +6,9 @@ Sublime Text 2 plugin to upload code to http://friendpaste.com directly from the
 Usage
 -------
 Select text, hit the key binding (default `ctrl+alt+c`) and your friendpaste url will be copied to your clipboard, with the proper syntax highlight selected.
+
+TODO
+-------
+
+Please todo.TODO file.
+To enjoy the file using SublimeText2 + PlainTasks plugin
