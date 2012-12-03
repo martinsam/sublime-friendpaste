@@ -4,7 +4,6 @@ import os
 import sublime
 import sublime_plugin
 import json
-import subprocess
 # import pycurl
 
 FRIENDPASTE_URL = "https://friendpaste.com"
