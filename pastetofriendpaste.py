@@ -3,10 +3,11 @@
 import os
 import sublime
 import sublime_plugin
-from httplib import HTTPConnection
 import json
+import subprocess
+# import pycurl
 
-FRIENDPASTE_URL = "friendpaste.com"
+FRIENDPASTE_URL = "https://friendpaste.com"
 
 SYNTAXES = {
 'ActionScript.tmLanguage': 'as',
@@ -102,13 +103,19 @@ class PasteToFriendpaste(sublime_plugin.TextCommand):
                     'language': syntax
                 })
 
-                http = HTTPConnection(FRIENDPASTE_URL)
-                http.request("POST", data, headers={"Content-Type": "application/json", "Accept": "application/json", "Connection": "close"})
-                resp = http.getresponse()
-                try:
-                    ret = json.loads(resp.read())
-                    sublime.set_clipboard(ret['url'])
-                    sublime.status_message('PasteBin URL copied to clipboard: ' + ret['url'])
-                except ValueError:
-                    sublime.status_message("Sorry Friendpaste is down")
-                http.close()
+                command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
+                {"url": FRIENDPASTE_URL, "data": data}
+                resp = os.popen(command).read()
+                resp = json.loads(resp)
+
+                # c = pycurl.Curl()
+                # c.setopt(c.URL, 'https://friendpaste.com')
+                # c.setopt(pycurl.HTTPHEADER, ['Content-Type: application/json'])
+                # c.setopt(pycurl.POST, 1)
+                # c.setopt(pycurl.SSL_VERIFYPEER, False)
+                # c.setopt(pycurl.SSL_VERIFYHOST, False)
+                # c.setopt(pycurl.POSTFIELDS, data)
+                # resp = c.perform()
+
+                sublime.set_clipboard(resp['url'])
+                sublime.status_message('PasteBin URL copied to clipboard: ' + resp['url'])
