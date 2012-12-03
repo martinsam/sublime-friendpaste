@@ -12,4 +12,4 @@ TODO
 
 Please read `todo.TODO` file.
 
-To enjoy the file using SublimeText2 + [PlainTasks plugin](https://github.com/aziz/PlainTasks)
+To enjoy the file: using SublimeText2 + [PlainTasks plugin](https://github.com/aziz/PlainTasks)
