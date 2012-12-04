@@ -4,7 +4,6 @@ import os
 import sublime
 import sublime_plugin
 import json
-# import pycurl
 
 FRIENDPASTE_URL = "https://friendpaste.com"
 
@@ -80,7 +79,6 @@ class PasteToFriendpastePrompt(sublime_plugin.WindowCommand):
 
 class PasteToFriendpaste(sublime_plugin.TextCommand):
     def run(self, view, paste_name=None):
-        pass
         if paste_name is None:
             paste_name = self.view.file_name()
         if paste_name is not None:
@@ -88,33 +86,28 @@ class PasteToFriendpaste(sublime_plugin.TextCommand):
         else:
             paste_name = "Untitled"
 
+        text = ""
         for region in self.view.sel():
 
             syntax = SYNTAXES.get(self.view.settings().get('syntax').split('/')[-1], 'text')
-            text = self.view.substr(region).encode('utf8')
-
-            if not text:
-                sublime.status_message('Error sending to %s: Nothing selected' % FRIENDPASTE_URL)
+            if text:
+                text = text + '\n' + self.view.substr(region).encode('utf8')
             else:
-                data = json.dumps({
-                    'title': paste_name,
-                    'snippet': text,
-                    'language': syntax
-                })
+                text = self.view.substr(region).encode('utf8')
 
-                command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
-                {"url": FRIENDPASTE_URL, "data": data}
-                resp = os.popen(command).read()
-                resp = json.loads(resp)
+        if not text:
+            sublime.status_message('Error sending to %s: Nothing selected' % FRIENDPASTE_URL)
+        else:
+            data = json.dumps({
+                'title': paste_name,
+                'snippet': text,
+                'language': syntax
+            })
 
-                # c = pycurl.Curl()
-                # c.setopt(c.URL, 'https://friendpaste.com')
-                # c.setopt(pycurl.HTTPHEADER, ['Content-Type: application/json'])
-                # c.setopt(pycurl.POST, 1)
-                # c.setopt(pycurl.SSL_VERIFYPEER, False)
-                # c.setopt(pycurl.SSL_VERIFYHOST, False)
-                # c.setopt(pycurl.POSTFIELDS, data)
-                # resp = c.perform()
+            command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
+            {"url": FRIENDPASTE_URL, "data": data}
+            resp = os.popen(command).read()
+            resp = json.loads(resp)
 
-                sublime.set_clipboard(resp['url'])
-                sublime.status_message('PasteBin URL copied to clipboard: ' + resp['url'])
+            sublime.set_clipboard(resp['url'])
+            sublime.status_message('PasteBin URL copied to clipboard: ' + resp['url'])

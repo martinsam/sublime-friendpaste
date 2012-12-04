@@ -1,6 +1,7 @@
 Feature:
  ☐ CODE: add error handling for network problem
- ☐ CODE: add multiselection case
+ ✔ CODE: add multiselection case @done (12-12-04 01:01)
  ☐ README: add installation section
+ ☐ PACKAGE: Add package control
  ☐ README: add gif animation to show use case
 
