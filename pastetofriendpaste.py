@@ -78,6 +78,14 @@ class PasteToFriendpastePrompt(sublime_plugin.WindowCommand):
 
 
 class PasteToFriendpaste(sublime_plugin.TextCommand):
+    def send_paste(self):
+        """ Send to FRIENDPASTE - Return url """
+        command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
+            {"url": FRIENDPASTE_URL, "data": self.data}
+        resp = os.popen(command).read()
+        resp = json.loads(resp)
+        return resp['url']
+
     def run(self, view, paste_name=None):
         if paste_name is None:
             paste_name = self.view.file_name()
@@ -98,16 +106,13 @@ class PasteToFriendpaste(sublime_plugin.TextCommand):
         if not text:
             sublime.status_message('Error sending to %s: Nothing selected' % FRIENDPASTE_URL)
         else:
-            data = json.dumps({
+            self.data = json.dumps({
                 'title': paste_name,
                 'snippet': text,
                 'language': syntax
             })
 
-            command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
-            {"url": FRIENDPASTE_URL, "data": data}
-            resp = os.popen(command).read()
-            resp = json.loads(resp)
+            url = self.send_paste()
 
-            sublime.set_clipboard(resp['url'])
-            sublime.status_message('PasteBin URL copied to clipboard: ' + resp['url'])
+            sublime.set_clipboard(url)
+            sublime.status_message('PasteBin URL copied to clipboard: ' + url)
