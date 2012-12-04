@@ -10,5 +10,6 @@ Select text, hit the key binding (default `ctrl+alt+c`) and your friendpaste url
 TODO
 -------
 
-Please todo.TODO file.
-To enjoy the file using SublimeText2 + PlainTasks plugin
+Please read `todo.TODO` file.
+
+To enjoy the file: using SublimeText2 + [PlainTasks plugin](https://github.com/aziz/PlainTasks)
