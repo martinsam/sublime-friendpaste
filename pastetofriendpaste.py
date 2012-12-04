@@ -4,8 +4,7 @@ import os
 import sublime
 import sublime_plugin
 import json
-
-FRIENDPASTE_URL = "https://friendpaste.com"
+from sendpaste import SendPaste, FRIENDPASTE_URL
 
 SYNTAXES = {
 'ActionScript.tmLanguage': 'as',
@@ -67,25 +66,7 @@ SYNTAXES = {
 }
 
 
-class PasteToFriendpastePrompt(sublime_plugin.WindowCommand):
-    def run(self):
-        self.window.show_input_panel("Paste Name:", "", self.on_done, None, None)
-        # self.window.show_input_panel("Paste Password:", "", self.on_done, None, None)
-
-    def on_done(self, paste_name):
-        if self.window.active_view():
-            self.window.active_view().run_command("paste_to_friendpaste", {"paste_name": paste_name})
-
-
-class PasteToFriendpaste(sublime_plugin.TextCommand):
-    def send_paste(self):
-        """ Send to FRIENDPASTE - Return url """
-        command = ("curl -XPOST %(url)s -d '%(data)s' -H 'Content-Type: application/json' -k") % \
-            {"url": FRIENDPASTE_URL, "data": self.data}
-        resp = os.popen(command).read()
-        resp = json.loads(resp)
-        return resp['url']
-
+class PasteToFriendpaste(sublime_plugin.TextCommand, SendPaste):
     def run(self, view, paste_name=None):
         if paste_name is None:
             paste_name = self.view.file_name()
@@ -106,13 +87,13 @@ class PasteToFriendpaste(sublime_plugin.TextCommand):
         if not text:
             sublime.status_message('Error sending to %s: Nothing selected' % FRIENDPASTE_URL)
         else:
-            self.data = json.dumps({
+            self._data = json.dumps({
                 'title': paste_name,
                 'snippet': text,
                 'language': syntax
             })
 
-            url = self.send_paste()
+            paste = self.send_paste()
 
-            sublime.set_clipboard(url)
-            sublime.status_message('PasteBin URL copied to clipboard: ' + url)
+            sublime.set_clipboard(paste['url'])
+            sublime.status_message('PasteBin URL copied to clipboard: ' + paste['url'])
