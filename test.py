@@ -13,6 +13,8 @@ class TestSendPaste(unittest.TestCase):
         self.sp = SendPaste(data=data)
 
     def test_send_paste(self):
+        self.assertIsInstance(self.sp.send_paste(), dict, \
+            msg="Connection is down")
         self.assertEqual(True, self.sp.send_paste()['ok'])
         self.assertIn('https://friendpaste.com', self.sp.send_paste()['url'])
 

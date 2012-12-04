@@ -21,6 +21,9 @@ class SendPaste():
                 " -H 'Content-Type: application/json' -k") % \
             {"url": FRIENDPASTE_URL, "data": self._data}
             resp = os.popen(command).read()
-            resp = json.loads(resp)
+            try:
+                resp = json.loads(resp)
+            except ValueError:
+                return None
             return resp
         return None
