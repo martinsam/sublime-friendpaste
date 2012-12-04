@@ -10,6 +10,10 @@ Twitter: @[martinsam](http://twitter.com/martinsam)
 ## Usage
 Select text, hit the key binding (default `ctrl+alt+c`) and your friendpaste url will be copied to your clipboard, with the proper syntax highlight selected.
 
+## Demo
+
+@TODO
+
 ## Installation
 
 ### Automatic installation 
